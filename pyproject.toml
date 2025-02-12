@@ -36,10 +36,10 @@ dev = ["vjer", "bumpver"]
 git-stream = "git_stream.__main__:main"
 
 [project.urls]
-homepage = "https://github.com/tardis4500/git-stream/"
+homepage = "https://github.com/arisilon/git-stream/"
 documentation = "https://git-stream.readthedocs.io"
-repository = "https://github.com/tardis4500/git-stream/"
-changelog = "https://github.com/tardis4500/git-stream/blob/main/CHANGELOG.md"
+repository = "https://github.com/arisilon/git-stream/"
+changelog = "https://github.com/arisilon/git-stream/blob/main/CHANGELOG.md"
 
 [tool.flake8]
 max-line-length = 200

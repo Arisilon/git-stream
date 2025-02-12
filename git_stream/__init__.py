@@ -11,7 +11,7 @@ __all__ = ('__title__', '__summary__', '__uri__',
 
 __title__ = 'git-stream'
 __summary__ = 'CI/CD Toolkit'
-__uri__ = 'https://github.com/tardis4500/git-stream/'
+__uri__ = 'https://github.com/arisilon/git-stream/'
 
 __version__ = '2.0.0rc0'
 __build_name__ = '{var:build_name}'

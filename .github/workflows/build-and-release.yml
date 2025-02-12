@@ -25,7 +25,7 @@ env:
 
 jobs:
   test:
-    uses: tardis4500/shared-actions/.github/workflows/vjer.yml@main
+    uses: arisilon/shared-actions/.github/workflows/vjer.yml@released
     with:
       action: test
       os: ${{ matrix.os }}
@@ -42,7 +42,7 @@ jobs:
 
   build:
     needs: test
-    uses: tardis4500/shared-actions/.github/workflows/vjer.yml@main
+    uses: arisilon/shared-actions/.github/workflows/vjer.yml@released
     with:
       action: build
       os: ubuntu-latest
@@ -51,7 +51,7 @@ jobs:
 
   install-test:
     needs: build
-    uses: tardis4500/shared-actions/.github/workflows/install-test.yml@main
+    uses: arisilon/shared-actions/.github/workflows/install-test.yml@released
     with:
       os: ${{ matrix.os }}
       python-version: ${{ matrix.python-version }}
