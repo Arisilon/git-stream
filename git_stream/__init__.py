@@ -10,10 +10,10 @@ __all__ = ('__title__', '__summary__', '__uri__',
            '__license__', '__copyright__')
 
 __title__ = 'git-stream'
-__summary__ = 'CI/CD Toolkit'
+__summary__ = 'Git Stream Implementation'
 __uri__ = 'https://github.com/arisilon/git-stream/'
 
-__version__ = '2.0.0rc0'
+__version__ = '2.0.1rc0'
 __build_name__ = '{var:build_name}'
 __build_date__ = '{var:build_date}'
 

@@ -1,13 +1,14 @@
 [build-system]
-requires = ["flit_core >=3.2,<4"]
-build-backend = "flit_core.buildapi"
+requires = ["setuptools >= 61.0"]
+build-backend = "setuptools.build_meta"
 
 [project]
 name = "git-stream"
+description = "Git Stream Implementation"
 authors = [{ name = "Jeffery G. Smith", email = "web@pobox.com" }]
 readme = "DOCUMENTATION.md"
 license = { file = "LICENSE" }
-dynamic = ["version", "description"]
+dynamic = ["version"]
 
 requires-python = "~=3.12"
 keywords = ["python", "programming", "utilities"]
@@ -23,9 +24,7 @@ classifiers = [
     "Natural Language :: English",
 ]
 
-dependencies = [
-    "BatCave"
-]
+dependencies = ["BatCave"]
 
 [project.optional-dependencies]
 dev = ["vjer", "bumpver"]
@@ -40,6 +39,12 @@ homepage = "https://github.com/arisilon/git-stream/"
 documentation = "https://git-stream.readthedocs.io"
 repository = "https://github.com/arisilon/git-stream/"
 changelog = "https://github.com/arisilon/git-stream/blob/main/CHANGELOG.md"
+
+[tool.setuptools]
+packages = ["git_stream"]
+
+[tool.setuptools.dynamic]
+version = { attr = "git_stream.__version__" }
 
 [tool.flake8]
 max-line-length = 200

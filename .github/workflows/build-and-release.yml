@@ -94,7 +94,7 @@ jobs:
           git config user.email "${{ github.triggering_actor }}@users.noreply.github.com"
           git pull
       - name: Publish to Test PyPi
-        uses: pypa/gh-action-pypi-publish@v1.12.3
+        uses: pypa/gh-action-pypi-publish@v1.12.4
         with:
           repository-url: https://test.pypi.org/legacy/
           packages-dir: ${{ env.ARTIFACTS_DIR }}
@@ -129,7 +129,7 @@ jobs:
       - name: Run post-publish steps
         run: vjer release
       - name: Publish to PyPi
-        uses: pypa/gh-action-pypi-publish@v1.12.3
+        uses: pypa/gh-action-pypi-publish@v1.12.4
         with:
           packages-dir: ${{ env.ARTIFACTS_DIR }}
       - name: Upload released artifacts

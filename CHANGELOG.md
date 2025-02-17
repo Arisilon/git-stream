@@ -7,10 +7,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Current Release
 
-### [2.0.1] - Unreleased
+### [2.0.1] - 2025-02-16
 
 - Changed
-  - Moved repo to Arisilon organization. (GitHub #1)
+  - Moved repo to Arisilon organization. (GitHub #2)
+  - Convert from flit to setuptools. (GitHub #3)
 
 ## Release History
 
