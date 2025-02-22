@@ -73,10 +73,6 @@ module = "dotmap.*"
 ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
-module = "flit.*"
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
 module = "xmlrunner.*"
 ignore_missing_imports = true
 
