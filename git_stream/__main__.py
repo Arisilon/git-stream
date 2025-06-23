@@ -231,7 +231,7 @@ def create(args: Namespace) -> None:
     """Create a stream."""
     config = _read_config()
     repo = args.repo if args.repo.startswith('git@') else f'{config.default_remote}{args.repo}.git'
-    repo_name = repo.split('/')[-1].split('.')[0]
+    repo_name = repo.split('/')[-1].replace('.git', '')
     stream_branch = f'{config.stream_branch_prefix}{args.name}'
     stream_name = f'{repo_name}-' + stream_branch.replace('/', '-')
     parent = args.parent if args.parent else config.default_parent
