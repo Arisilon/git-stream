@@ -21,4 +21,4 @@ __author__ = 'Jeffery G. Smith'
 __email__ = 'web@pobox.com'
 
 __license__ = 'MIT'
-__copyright__ = 'Copyright (c) 2024 Jeffery G. Smith'
+__copyright__ = 'Copyright (c) 2025 Jeffery G. Smith'
