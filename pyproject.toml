@@ -27,7 +27,7 @@ dependencies = ["BatCave"]
 
 [project.optional-dependencies]
 dev = ["bumpver", "vjer"]
-test = ["flake8", "flake8-annotations", "flake8-pyproject", "mypy", "pylint"]
+test = []
 # doc = []
 
 [project.scripts]
