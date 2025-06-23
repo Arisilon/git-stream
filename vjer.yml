@@ -19,6 +19,11 @@ build:
     - type: setuptools
 release:
   steps:
+    - type: pypi
+      test_pypi: true
+      username: __token__
+      password: "{var:PYPI_TOKEN}"
+      pre_release_only: true
     - type: bumpver
     - type: setuptools_build
       release_only: true
@@ -30,5 +35,7 @@ release:
         patch: True
         tag: rc
         tag-num: True
-
-# cSpell: ignore bumpver
+    - type: pypi
+      username: __token__
+      password: "{var:PYPI_TOKEN}"
+      release_only: true

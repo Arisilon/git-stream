@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools >= 61.0"]
+requires = ["setuptools >= 77.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -7,14 +7,13 @@ name = "git-stream"
 description = "Git Stream Implementation"
 authors = [{ name = "Jeffery G. Smith", email = "web@pobox.com" }]
 readme = "DOCUMENTATION.md"
-license = { file = "LICENSE" }
+license-files = ["LICENSE"]
 dynamic = ["version"]
 
 requires-python = "~=3.12"
 keywords = ["git", "programming", "utilities"]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
-    "License :: OSI Approved :: MIT License",
 
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3.12",
@@ -27,8 +26,8 @@ classifiers = [
 dependencies = ["BatCave"]
 
 [project.optional-dependencies]
-dev = ["vjer", "bumpver"]
-# test = []
+dev = ["bumpver", "vjer"]
+test = ["flake8", "flake8-annotations", "flake8-pyproject", "mypy", "pylint"]
 # doc = []
 
 [project.scripts]
@@ -72,13 +71,9 @@ ignore_missing_imports = true
 module = "dotmap.*"
 ignore_missing_imports = true
 
-[[tool.mypy.overrides]]
-module = "xmlrunner.*"
-ignore_missing_imports = true
-
 [tool.bumpver]
-current_version = "v2.0.2rc0"
-version_pattern = "vMAJOR.MINOR.PATCH[PYTAGNUM]"
+current_version = "2.0.2rc0"
+version_pattern = "MAJOR.MINOR.PATCH[PYTAGNUM]"
 commit_message = "bump version {old_version} -> {new_version} [skip ci]"
 commit = true
 tag = false
@@ -87,4 +82,4 @@ push = true
 [tool.bumpver.file_patterns]
 "git_stream/__init__.py" = ["__version__ = '{pep440_version}'"]
 
-# cSpell:ignore buildapi bumpver xmlrunner pytagnum
+# cSpell:ignore pyproject pytagnum
