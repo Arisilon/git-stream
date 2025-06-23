@@ -27,5 +27,5 @@ jobs:
     uses: arisilon/shared-actions/.github/workflows/python-cicd.yaml@released
     with:
       skip-pypi-test: ${{ inputs.skip-pypi-test || false }}
-      test-action: "python -c 'import git-stream; print(git-stream.__version__)'"
+      test-action: "python -c 'import git_stream; print(git_stream.__version__)'"
     secrets: inherit
