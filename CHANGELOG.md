@@ -7,12 +7,17 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Current Release
 
+### [2.0.3] - 2026-02-10
+
+- Changed
+  - Updated build dependencies. (GitHub #5)
+
+## Release History
+
 ### [2.0.2] - 2025-06-23
 
 - Changed
   - Fixed stream path when repo name starts with a period. (GitHub #4)
-
-## Release History
 
 ### [2.0.1] - 2025-02-16
 
