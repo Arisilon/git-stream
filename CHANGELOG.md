@@ -7,12 +7,19 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Current Release
 
+### [3.0.0] - 2026-02-12
+
+- Changed
+  - Make the default branch the repo default. (GitHub #6)
+  - Use standard merge on delivery branch rather than squash merge. (GitHub #7)
+  - Store the config file in the correct OS location. (GitHub #8)
+
+## Release History
+
 ### [2.0.3] - 2026-02-10
 
 - Changed
   - Updated build dependencies. (GitHub #5)
-
-## Release History
 
 ### [2.0.2] - 2025-06-23
 

@@ -5,22 +5,6 @@ __main__ module for git-stream.
 Enables use as module: $ python -m git-stream --version
 """
 
-# TODO:
-#   Move config to OS correct location
-#   Add to BatCave.cms
-#       DATA_CACHE_DIR
-#       branch property to return current branch name: _client.active_branch
-#       delete remote branch: _client.git.push('origin', '--delete', branch)
-#       new branch creation:
-#           set remote: _client.git.checkout('-b', branch, '--track', branch_to_track)
-#           no push
-#       pull with rebase: _client.git.pull('--rebase', 'origin', branch)
-#       reset: _client.git.reset(branch)
-#       add all files: _client.git.add('--all')
-#       commit without push: client.git.commit('-a', '-m', commit_message)
-#       push to other branch: _client.git.push('origin', 'HEAD')
-#       set remote: _client.git.branch('--set-upstream-to', branch)
-
 # Import standard modules
 from argparse import Namespace
 from getpass import getuser
@@ -32,16 +16,18 @@ from sys import exit as sys_exit, stderr, stdout
 from batcave.commander import Argument, Commander, SubParser
 from batcave.cms import Client, ClientType
 from batcave.lang import dotmap_to_yaml, yaml_to_dotmap
-from batcave.sysutil import popd, pushd, rmpath, SysCmdRunner
+from batcave.sysutil import get_app_config_dir, popd, pushd, rmpath, SysCmdRunner
 from dotmap import DotMap
 from git.exc import GitCommandError, InvalidGitRepositoryError
 
-CONFIG = Path('~/.git-streams.yml').expanduser()
+# Import local modules
+from . import __title__
+
+CONFIG = get_app_config_dir(__title__) / 'config.yaml'
 CONFIG_BAK = CONFIG.with_suffix('.bak')
 CONFIG_SCHEMA = 1
 STREAM_SCHEMA = 1
-DEFAULTS = DotMap(default_parent='main',
-                  default_remote='git@github.com:',
+DEFAULTS = DotMap(default_remote='git@github.com:',
                   default_pr_reviewer='',
                   delivery_branch_template='%t_%d',
                   stream_branch_prefix=f'{getuser()}/',
@@ -62,7 +48,7 @@ class Stream:
         if self.name not in self._config.streams:
             _exit(f'This stream is not defined: {self.name}', 1)
         self._definition = self._config.streams[self.name]
-        if (branch := str(self._git_client._client.active_branch)) != self._definition.branch:  # pylint: disable=protected-access
+        if (branch := self._git_client.active_branch) != self._definition.branch:
             _exit(f'This stream is on the wrong branch ({branch}). Should be: {self._definition.branch}', 1)
 
     def __str__(self):
@@ -84,7 +70,7 @@ class Stream:
     def cleanup(self) -> None:
         """Cleanup the remote branch for the stream."""
         try:
-            self._git_client._client.git.push('origin', '--delete', self._definition.branch)  # pylint: disable=protected-access
+            self._git_client.delete_branch(self._definition.branch)
         except GitCommandError:
             pass
 
@@ -92,40 +78,21 @@ class Stream:
         """Create a pull request for delivery to the parent branch."""
         if not (delivery_branch := self._definition.delivery_branch):
             _exit('No delivery branch set for this stream.')
-        branch = self._definition.branch
-        origin_parent = 'origin/' + (target_parent := self._definition.parents[0])
-        self._git_client.switch(branch)
-
+        self.update()
         try:
-            self._git_client._client.git.checkout('-b', delivery_branch, '--track', origin_parent)  # pylint: disable=protected-access
-            first_delivery = True
+            self._git_client.create_branch(delivery_branch)
         except GitCommandError as err:
             if 'exit code(128)' not in str(err):
                 raise
             self._git_client.switch(delivery_branch)
-            first_delivery = False
-
-        if first_delivery:
-            self._git_client._client.git.pull('--rebase', 'origin', branch)  # pylint: disable=protected-access
-            self._git_client._client.git.reset(origin_parent)  # pylint: disable=protected-access
-            self._git_client._client.git.add('--all')  # pylint: disable=protected-access
-            try:
-                self._git_client._client.git.commit('-a', '-m', commit_message)  # pylint: disable=protected-access
-            except GitCommandError as err:
-                if 'Your branch is up to date' not in str(err):
-                    raise
-                _exit('There are no changes to deliver', 1)
-            self._git_client._client.git.push('origin', 'HEAD')  # pylint: disable=protected-access
-            self._git_client._client.git.branch('--set-upstream-to', f'origin/{delivery_branch}')  # pylint: disable=protected-access
-        else:
-            self._git_client.merge(branch, checkin_message=commit_message)
+            self._git_client.merge(self._definition.branch, checkin_message=commit_message)
 
         if create_pr:
             if 'github' not in self._definition.repo:
                 _exit('Unable to create PR for non-GitHub repo.')
-            SysCmdRunner('gh', 'pr', 'create', fill=True, base=target_parent,
+            SysCmdRunner('gh', 'pr', 'create', fill=True, base=self._definition.parents[0],
                          reviewer=self._definition.pr_reviewer if self._definition.pr_reviewer else self._config.default_pr_reviewer).run()
-        self._git_client.switch(branch)
+        self._git_client.switch(self._definition.branch)
 
     def rm_parent(self, parent: str) -> None:
         """Remove a parent to the current stream."""
@@ -162,6 +129,7 @@ class Stream:
 def main() -> None:
     """The main entry point."""
     if not CONFIG.exists():
+        get_app_config_dir(__title__).mkdir(parents=True, exist_ok=True)
         _write_config(DEFAULTS | DotMap(schema=CONFIG_SCHEMA, streams={}))
     Commander('Git Stream Manager', subparsers=[SubParser('add_parent', lambda a: stream_action('add_parent', **vars(a)), [Argument('parent')]),
                                                 SubParser('config', configurator, [Argument('-s', '--set')]),
@@ -235,25 +203,24 @@ def create(args: Namespace) -> None:
         repo_name = repo_name[:-4]
     stream_branch = f'{config.stream_branch_prefix}{args.name}'
     stream_name = f'{repo_name}-' + stream_branch.replace('/', '-')
-    parent = args.parent if args.parent else config.default_parent
     if stream_name in config.streams:
         _exit(f'Stream already defined: {stream_name}', 1)
     with Client(ClientType.git, stream_name,
                 connect_info=repo,
                 root=Path(config.stream_home) / stream_name,
-                branch=parent,
+                branch=None,
                 create=True, cleanup=False) as git_client:
+        config.streams[stream_name] |= DotMap(repo=repo,
+                                              description=args.name,
+                                              branch=stream_branch,
+                                              parents=[args.parent if args.parent else git_client.active_branch],
+                                              schema=STREAM_SCHEMA)
         try:
             git_client.switch(stream_branch)
         except GitCommandError as err:
             if 'did not match any file(s) known to git' not in str(err):
                 raise
             git_client.create_branch(stream_branch)
-    config.streams[stream_name] |= DotMap(repo=repo,
-                                          description=args.name,
-                                          branch=stream_branch,
-                                          parents=[parent],
-                                          schema=STREAM_SCHEMA)
     for item in ('delivery_branch', 'ticket'):
         if value := getattr(args, item):
             config.streams[stream_name][item] = value

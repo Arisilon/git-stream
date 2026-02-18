@@ -20,7 +20,6 @@ class TestMain(unittest.TestCase):
         config_path = Path(self.tempdir.name) / 'config.yml'
         initial = {
             'schema': main_module.CONFIG_SCHEMA,
-            'default_parent': 'main',
             'default_remote': 'git@github.com:',
             'default_pr_reviewer': '',
             'delivery_branch_template': '%t_%d',
@@ -67,10 +66,10 @@ class TestMain(unittest.TestCase):
         self.assertIn('new_field: value', out.getvalue())
 
     def test_configurator_set(self):
-        args = SimpleNamespace(set='default_parent=dev')
+        args = SimpleNamespace(set='default_pr_reviewer=dev')
         main_module.configurator(args)
         cfg = main_module._read_config()
-        self.assertEqual(cfg.default_parent, 'dev')
+        self.assertEqual(cfg.default_pr_reviewer, 'dev')
 
     def test_list_streams(self):
         cfg = main_module._read_config()
