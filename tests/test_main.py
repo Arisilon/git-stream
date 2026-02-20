@@ -1,22 +1,24 @@
-import sys
-import os
-import yaml
-import unittest
-import tempfile
+"""Unit tests for git_stream.__main__ functions."""
+
+# pylint: disable=missing-class-docstring,missing-function-docstring,invalid-name,protected-access
+# flake8: noqa
+
+from unittest import main, TestCase
+from tempfile import TemporaryDirectory
 from io import StringIO
-from contextlib import redirect_stdout, redirect_stderr
+from contextlib import redirect_stdout
 from pathlib import Path
 from types import SimpleNamespace
-from dotmap import DotMap
 
-# Adjust import path to include project root
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from dotmap import DotMap
+from yaml import safe_dump
+
 from git_stream import __main__ as main_module
 
-class TestMain(unittest.TestCase):
+class TestMain(TestCase):
     def setUp(self):
         # Create isolated temp directory and config file
-        self.tempdir = tempfile.TemporaryDirectory()
+        self.tempdir = TemporaryDirectory()
         config_path = Path(self.tempdir.name) / 'config.yml'
         initial = {
             'schema': main_module.CONFIG_SCHEMA,
@@ -27,7 +29,7 @@ class TestMain(unittest.TestCase):
             'stream_home': str(Path(self.tempdir.name) / 'streams'),
             'streams': {}
         }
-        config_path.write_text(yaml.safe_dump(initial))
+        config_path.write_text(safe_dump(initial))
         main_module.CONFIG = config_path
 
     def tearDown(self):
@@ -36,7 +38,7 @@ class TestMain(unittest.TestCase):
     def test_read_config_mismatch_schema(self):
         # Write invalid schema
         bad_path = Path(self.tempdir.name) / 'bad.yml'
-        bad_path.write_text(yaml.safe_dump({'schema': 999}))
+        bad_path.write_text(safe_dump({'schema': 999}))
         main_module.CONFIG = bad_path
         buf = StringIO()
         # Patch module-level stderr to capture print
@@ -105,18 +107,18 @@ class TestMain(unittest.TestCase):
     def test_stream_action_delegates(self):
         calls = {}
         class Dummy:
-            def foo(self, **kwargs):
+            def dummy(self, **kwargs):
                 calls['called'] = True
                 calls['args'] = kwargs
         # Patch Stream to return Dummy instance
         original_stream = main_module.Stream
-        main_module.Stream = lambda: Dummy()
+        main_module.Stream = Dummy
         try:
-            main_module.stream_action('foo', bar=1)
+            main_module.stream_action('dummy', bar=1)
         finally:
             main_module.Stream = original_stream
         self.assertTrue(calls.get('called', False))
         self.assertEqual(calls.get('args'), {'bar': 1})
 
 if __name__ == '__main__':
-    unittest.main()
+    main()

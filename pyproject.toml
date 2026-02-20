@@ -27,7 +27,7 @@ dependencies = ["BatCave"]
 
 [project.optional-dependencies]
 dev = ["bumpver", "vjer"]
-test = []
+test = ["types-PyYAML"]
 # doc = []
 
 [project.scripts]
