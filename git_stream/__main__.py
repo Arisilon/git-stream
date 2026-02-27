@@ -208,7 +208,7 @@ def create(args: Namespace) -> None:
     with Client(ClientType.git, stream_name,
                 connect_info=repo,
                 root=Path(config.stream_home) / stream_name,
-                branch=None,
+                branch=args.parent if args.parent else None,
                 create=True, cleanup=False) as git_client:
         config.streams[stream_name] |= DotMap(repo=repo,
                                               description=args.name,
