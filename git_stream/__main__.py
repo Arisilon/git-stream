@@ -90,7 +90,7 @@ class Stream:
         if create_pr:
             if 'github' not in self._definition.repo:
                 _exit('Unable to create PR for non-GitHub repo.')
-            SysCmdRunner('gh', 'pr', 'create', fill=True, base=self._definition.parents[0],
+            SysCmdRunner('gh', 'pr', 'create', fill=True, base=self._definition.parents[0], title=commit_message,
                          reviewer=self._definition.pr_reviewer if self._definition.pr_reviewer else self._config.default_pr_reviewer).run()
         self._git_client.switch(self._definition.branch)
 
@@ -269,3 +269,4 @@ if __name__ == '__main__':
     main()
 
 # cSpell:ignore batcave dotmap cysiv checkin
+

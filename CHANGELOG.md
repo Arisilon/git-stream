@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Current Release
 
+### [3.0.1] - 2026-02-27
+
+- Changed
+  - Fixed --parent option on create. (GitHub #9)
+  - Correctly the set PR title on deliver. (GitHub #10)
+
+## Release History
+
 ### [3.0.0] - 2026-02-19
 
 - Changed
@@ -14,8 +22,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
   - Use standard merge on delivery branch rather than squash merge. (GitHub #7)
   - Store the config file in the correct OS location. (GitHub #8)
   - Add unit tests.
-
-## Release History
 
 ### [2.0.3] - 2026-02-10
 
