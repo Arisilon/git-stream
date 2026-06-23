@@ -30,4 +30,5 @@ jobs:
     with:
       install-test-action: "python -c 'import git_stream; print(git_stream.__version__)'"
       skip-pypi-test: ${{ inputs.skip-pypi-test || false }}
+      update-changelog: true
     secrets: inherit
