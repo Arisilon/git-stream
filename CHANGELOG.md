@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Update to Python 3.14 (GitHub #11)
+- Automate change log generation. (GitHub #12)
 
 ## [3.0.1] - 2026-02-27
 
