@@ -18,6 +18,8 @@ test:
 build:
   steps:
     - type: setuptools
+    - type: sphinx
+      doc_type: cli
 release:
   steps:
     - type: pypi

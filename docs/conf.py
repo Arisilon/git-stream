@@ -13,7 +13,7 @@
 from pathlib import Path
 import sys
 sys.path.insert(0, str(Path.cwd().parent))
-from git_stream import __author__, __copyright__  # noqa: E402
+from git_stream import __author__, __copyright__, __version__  # noqa: E402
 
 
 # -- Project information -----------------------------------------------------
@@ -23,7 +23,8 @@ copyright = __copyright__
 author = __author__
 
 # The full version, including alpha/beta/rc tags
-release = '30.0.0'
+release = __version__
+master_doc = 'index'
 
 
 # -- General configuration ---------------------------------------------------
@@ -31,7 +32,12 @@ release = '30.0.0'
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ['sphinx.ext.autodoc', 'sphinx.ext.napoleon', 'sphinx.ext.todo']
+extensions = [
+    'sphinx.ext.autodoc',
+    'sphinx.ext.napoleon',
+    'sphinx.ext.todo',
+    'sphinxcontrib.programoutput',
+]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']

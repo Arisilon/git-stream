@@ -1,7 +1,9 @@
-git-stream
-==========
+Package Reference
+=================
+
+The `git_stream` package is the runtime implementation for the git-stream CLI.
 
 .. toctree::
    :maxdepth: 4
 
-   git-stream
+   git_stream
