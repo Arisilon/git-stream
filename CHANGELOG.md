@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add ReadTheDocs configuration. (GitHub #13)
+
 ### Changed
 
 - Update to Python 3.14 (GitHub #11)
